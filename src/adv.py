@@ -1,5 +1,19 @@
 from room import Room
 from player import Player
+from item import Item
+
+items = {
+    "sword": Item("sword", "a sharp sword"),
+    "torch": Item("torch", "a burning torch"),
+    "potion": Item("potion", "a magic potion"),
+    "club": Item("club", "a wooden club"),
+    "shield": Item("shield", "a wooden shield"),
+    "apple": Item("snake", "a ripe apple"),
+    "chest": Item("chest", "a treasure test"),
+    "key": Item("key", "a rusty key"),
+    "bomb": Item("map", "a treasure map"),
+    "shoes": Item('cheese', "a pair of lightly used shoes")
+}
 
 # Declare all the rooms
 
@@ -64,20 +78,17 @@ while choice not in ['q', 'quit']:
         print(f"{player.room.desc}\n")
 
         if choice in ['n', 'N'] and hasattr(player.room, 'n_to'):
-            moved = True
             player.room = player.room.n_to
         elif choice in ['s', 'S'] and hasattr(player.room, 's_to'):
-            moved = True
             player.room = player.room.s_to
         elif choice in ['e', 'E'] and hasattr(player.room, 'e_to'):
-            moved = True
             player.room = player.room.e_to
         elif choice in ['w', 'W'] and hasattr(player.room, 'w_to'):
-            moved = True
             player.room = player.room.w_to
         elif choice in ['q', 'quit']:
             print(f"\nThanks for playing!\n")
-        else:
             moved = False
+        else:
             print(
                 f"\n!*****!\nMove not allowed, please select again\n!*****!\n")
+
