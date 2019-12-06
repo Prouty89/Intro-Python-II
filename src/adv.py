@@ -4,15 +4,10 @@ from item import Item
 
 items = {
     "sword": Item("sword", "a sharp sword"),
-    "torch": Item("torch", "a burning torch"),
-    "potion": Item("potion", "a magic potion"),
-    "club": Item("club", "a wooden club"),
-    "shield": Item("shield", "a wooden shield"),
-    "apple": Item("snake", "a ripe apple"),
+    "candle": Item("torch", "a burning candle"),
     "chest": Item("chest", "a treasure test"),
     "key": Item("key", "a rusty key"),
     "bomb": Item("map", "a treasure map"),
-    "shoes": Item('cheese', "a pair of lightly used shoes")
 }
 
 # Declare all the rooms
@@ -46,7 +41,11 @@ room['overlook'].s_to = room['foyer']
 room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
-
+room['outside'].items.append('sword')
+room['foyer'].items.append('map')
+room['overlook'].items.append('key')
+room['narrow'].items.append('torch')
+room['treasure'].items.append('chest')
 
 #
 # Main
@@ -69,14 +68,17 @@ print(f"Welcome, {player.name}!")
 choice = None
 moved = True
 while choice not in ['q', 'quit']:
+    print("===============\n")
+    print(f"{player.name} in \"{player.room.name}\"")
+    print(f"{player.room.desc}\n")
+    player.room.print_items()
+
     choice = input(
-        "\nMove (n, s, w, e, or quit)")
+        "\nCheck Inventory (i/inv), Move (n, s, w, e) or Grab an Item (add/drop): ")
+    choice_arr = choice.split(' ')
+    choice_len = len(choice_arr)
 
     if moved:
-        print("===============\n")
-        print(f"{player.name} enters \"{player.room.name}\"")
-        print(f"{player.room.desc}\n")
-
         if choice in ['n', 'N'] and hasattr(player.room, 'n_to'):
             player.room = player.room.n_to
         elif choice in ['s', 'S'] and hasattr(player.room, 's_to'):
@@ -85,6 +87,8 @@ while choice not in ['q', 'quit']:
             player.room = player.room.e_to
         elif choice in ['w', 'W'] and hasattr(player.room, 'w_to'):
             player.room = player.room.w_to
+        elif choice in ['i', 'inv']:
+            player.inventory()
         elif choice in ['q', 'quit']:
             print(f"\nThanks for playing!\n")
             moved = False
@@ -92,3 +96,18 @@ while choice not in ['q', 'quit']:
             print(
                 f"\n!*****!\nMove not allowed, please select again\n!*****!\n")
 
+    if choice_len == 2:
+        action = choice_arr[0]
+        item = choice_arr[1]
+        if action in ['add']:
+            if item in items.keys() and items[item] in player.room.items:
+                player.add_item(items[item])
+                print(f"{player.name} picks up a {item}!\n")
+            else:
+                print(f"This isn't available to pick up.\n")
+        if action == 'drop':
+            if item in items.keys() and items[item] in player.items:
+                player.drop_item(items[item])
+                print(f"{player.name} drops {item}.\n")
+            else:
+                print(f"You don't have an item to drop.\n")
