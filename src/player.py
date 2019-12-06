@@ -14,12 +14,12 @@ class Player:
         if len(self.items) > 0:
             player_items = "\n".join([str(item) for item in self.items])
         else:
-            player_items = "nothing"
+            player_items = "No items"
         print(f"\nInventory:\n{player_items}\n")
 
     def drop_item(self, item):
         self.items = list(
             filter(lambda i: i.name is not item.name, self.items))
 
-    def take_item(self, item):
+    def add_item(self, item):
         self.items.append(item)
